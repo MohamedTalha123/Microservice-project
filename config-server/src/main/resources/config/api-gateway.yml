@@ -7,9 +7,14 @@ spring.application.name: api-gateway
 
 # add more paths, filters, predicates later.
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://localhost:9000/realms/Hps-microservice"
   cloud:
     gateway:
-      globalcors:
+      global-cors:
         corsConfigurations:
           '[/**]':
             allowedOrigins: "*"
@@ -17,16 +22,10 @@ spring:
             allowedHeaders: "*"
       discovery:
         locator:
-          enabled: false
-          lower-case-service-id: true
+          enabled: true
       routes:
-        - id: product-service
-          uri: lb://product-service
-          predicates:
-            - Path=/api/v1/products/**
-
         - id: user-service
-          uri: lb://user-service
+          uri: lb:http://USER-SERVICE
           predicates:
             - Path=/api/v1/users/**
 
@@ -37,6 +36,8 @@ eureka:
     fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8089/eureka/
+
+
 
 # okta:
 #   oauth2:
