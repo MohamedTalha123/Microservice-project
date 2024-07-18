@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/usersDB
+    url: jdbc:mysql://localhost:3307/productsDB
     username: root
     password: secret
   jpa:
@@ -18,4 +18,4 @@ eureka:
     fetch-registry: true
 
 server:
-  port: 8080
+  port: 8081
