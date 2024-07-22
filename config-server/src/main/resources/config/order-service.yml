@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/ordersDB
+    username: root
+    password: secret
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+
+eureka:
+  instance.prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8089/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+server:
+  port: 8082
+
+application:
+  config:
+    user-url: http://localhost:8091/api/v1/users
+    product-url: http://localhost:8091/api/v1/products
+    payment-url: http://localhost:8091/api/v1/payments
+
+

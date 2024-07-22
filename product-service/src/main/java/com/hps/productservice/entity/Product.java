@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Data
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     //todo: add reference
     //todo: change id type to UUID

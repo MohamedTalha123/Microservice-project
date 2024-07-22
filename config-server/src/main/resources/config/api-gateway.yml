@@ -32,6 +32,8 @@ spring:
           uri: lb:http://PRODUCT-SERVICE
           predicates:
             - Path=/api/v1/products/**
+            - Path=/api/v1/categories/**
+
 
 eureka:
   instance.prefer-ip-address: true

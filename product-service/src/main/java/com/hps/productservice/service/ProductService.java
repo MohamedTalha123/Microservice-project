@@ -49,7 +49,6 @@ public class ProductService {
             product.setAvailableQuantity(newAvailableQuantity);
             productRepository.save(product);
             purchasedProduct.add(productMapper.toProductPurchaseResponse(product, productRequest.quantity()));
-            
         }
         return purchasedProduct;
     }
