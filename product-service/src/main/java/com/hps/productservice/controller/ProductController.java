@@ -1,9 +1,6 @@
 package com.hps.productservice.controller;
 
-import com.hps.productservice.dto.ProductPurchaseRequest;
-import com.hps.productservice.dto.ProductPurchaseResponse;
-import com.hps.productservice.dto.ProductRequest;
-import com.hps.productservice.dto.ProductResponse;
+import com.hps.productservice.dto.*;
 import com.hps.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +38,10 @@ public class ProductController {
         productService.deleteProduct(productId);
         return ResponseEntity.accepted().build();
     }
-
+    @PutMapping("/{productId}")
+    public ResponseEntity<Long> updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductRequest request) {
+        return ResponseEntity.ok(productService.updateProduct(productId, request));
+    }
 
 
 

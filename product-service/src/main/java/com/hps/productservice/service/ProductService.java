@@ -70,4 +70,15 @@ public class ProductService {
     public void deleteProduct(Long productId) {
          productRepository.deleteById(productId);
     }
+
+    public Long updateProduct(Long productId, ProductRequest request) {
+        var product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with the ID:: " + productId));
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setImageUrl(request.imageUrl());
+        product.setAvailableQuantity(request.availableQuantity());
+        product.setPrice(request.price());
+        return productRepository.save(product).getId();
+    }
 }
