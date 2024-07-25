@@ -16,6 +16,31 @@ eureka:
       defaultZone: http://localhost:8089/eureka/
     register-with-eureka: true
     fetch-registry: true
+keycloak:
+  realm: Hps-microservice
+  auth-server-url: http://localhost:9000/auth
+  resource: user-service
+  credentials:
+    secret: J54Hi1cZjvh9mXH1M4egMYmevkn4aBOJ
+  use-resource-role-mappings: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000/auth/realms/Hps-microservice
+  security-constraints:
+    - authRoles:
+        - user
+      securityCollections:
+        - patterns:
+            - /users/*
+    - authRoles:
+        - admin
+      securityCollections:
+        - patterns:
+            - /admin/*
+
+
 
 server:
   port: 8080

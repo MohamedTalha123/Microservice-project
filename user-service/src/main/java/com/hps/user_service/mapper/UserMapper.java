@@ -19,6 +19,7 @@ public class UserMapper {
                 .email(request.email())
                 .password(request.password())
                 .sexe(request.sexe())
+                .role(request.role())
                 .build();
     }
 
@@ -29,7 +30,8 @@ public class UserMapper {
                 user.getLastName(),
                 user.getPassword(),
                 user.getEmail(),
-                user.getSexe()
+                user.getSexe(),
+                user.getRole()
         );
     }
 }

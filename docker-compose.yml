@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:22.0.4
@@ -42,6 +41,18 @@ services:
       - mysql
     networks:
       - db-net
+
+#  zipkin:
+#    image: openzipkin/zipkin
+#    container_name: zipkin
+#    environment:
+#      - STORAGE_TYPE=mysql
+#      - MYSQL_HOST=mysql
+#      - MYSQL_USER= root
+#      - MYSQL_PASS=secret
+#      - MYSQL_DB=zipkin
+#    ports:
+#      - "9411:9411"
 
 #  rabbitmq:
 #    image: rabbitmq:management

@@ -19,6 +19,7 @@
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(authz -> authz
 //                        .requestMatchers("/actuator/**").permitAll()
+
 //                        .anyRequest().authenticated()
 //                )
 //                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));

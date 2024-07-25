@@ -26,7 +26,7 @@ public class UserService {
     public void updateUser(UserRequest request) {
         var user = userRepository.findById(request.id())
                 .orElseThrow(()-> new UserNotFoundException(
-                        String.format("Cannot update customer:: No customer found with the provided ID: %s ", request.id())
+                        String.format("Cannot update user:: No user found with the provided ID: %s ", request.id())
                 ));
         mergeUser(user,request);
         userRepository.save(userMapper.toUser(request));
