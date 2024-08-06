@@ -15,11 +15,14 @@ public class OrderLineItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
-    private Long productId;
-    private double quantity;
-    private BigDecimal price;
 
+    private Long productId;
+
+    private double quantity;
+
+    private BigDecimal price;
 }

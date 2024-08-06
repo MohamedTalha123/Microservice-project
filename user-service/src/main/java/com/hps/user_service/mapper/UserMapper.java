@@ -18,8 +18,8 @@ public class UserMapper {
                 .password(request.password())
                 .email(request.email())
                 .password(request.password())
-                .sexe(request.sexe())
                 .role(request.role())
+                .sexe(request.sexe())
                 .build();
     }
 

@@ -1,7 +1,10 @@
 package com.hps.productservice.dto;
 
-import java.math.BigDecimal;
+import com.hps.productservice.entity.Sexe;
+import lombok.Builder;
 
+import java.math.BigDecimal;
+@Builder
 public record ProductResponse(
         Long id,
         String description,
@@ -9,6 +12,7 @@ public record ProductResponse(
         double availableQuantity,
         BigDecimal price,
         String imageUrl,
+        Sexe sexe,
         Long categoryId,
         String categoryName,
         String categoryDescription

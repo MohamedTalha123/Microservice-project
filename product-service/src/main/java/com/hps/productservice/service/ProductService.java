@@ -5,6 +5,7 @@ import com.hps.productservice.dto.ProductPurchaseResponse;
 import com.hps.productservice.dto.ProductRequest;
 import com.hps.productservice.dto.ProductResponse;
 import com.hps.productservice.entity.Product;
+import com.hps.productservice.entity.Sexe;
 import com.hps.productservice.exception.ProductPurchaseException;
 import com.hps.productservice.mapper.ProductMapper;
 import com.hps.productservice.repository.ProductRepository;
@@ -99,6 +100,15 @@ public class ProductService {
         product.setImageUrl(request.imageUrl());
         product.setAvailableQuantity(request.availableQuantity());
         product.setPrice(request.price());
+        product.setSexe(request.sexe());
         return productRepository.save(product).getId();
     }
+
+//    public List<ProductResponse> findProductsBySexe(Sexe sexe) {
+//        return productRepository.findAllBySexe(sexe)
+//                .stream()
+//                .map(product -> productMapper.toProductResponse(product))
+//                .collect(Collectors.toList());
+//    }
+
 }

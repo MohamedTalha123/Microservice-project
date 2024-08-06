@@ -5,10 +5,11 @@ import com.hps.productservice.dto.ProductRequest;
 import com.hps.productservice.dto.ProductResponse;
 import com.hps.productservice.entity.Category;
 import com.hps.productservice.entity.Product;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class  ProductMapper {
+@Component
+public class ProductMapper {
+
     public Product toProduct(ProductRequest request) {
         return Product.builder()
                 .id(request.id())
@@ -17,6 +18,7 @@ public class  ProductMapper {
                 .price(request.price())
                 .availableQuantity(request.availableQuantity())
                 .imageUrl(request.imageUrl())
+                .sexe(request.sexe())
                 .category(Category.builder()
                         .id(request.categoryId())
                         .build()
@@ -26,17 +28,17 @@ public class  ProductMapper {
 
     public ProductResponse toProductResponse(Product product) {
         return new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getAvailableQuantity(),
-                        product.getPrice(),
-                        product.getImageUrl(),
-                        product.getCategory().getId(),
-                        product.getCategory().getName(),
-                        product.getCategory().getDescription()
-
-                );
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getAvailableQuantity(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getSexe(),
+                product.getCategory().getId(),
+                product.getCategory().getName(),
+                product.getCategory().getDescription()
+        );
     }
 
     public ProductPurchaseResponse toProductPurchaseResponse(Product product, double quantity) {

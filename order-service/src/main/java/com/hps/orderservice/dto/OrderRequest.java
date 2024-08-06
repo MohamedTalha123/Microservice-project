@@ -10,7 +10,6 @@ public record OrderRequest(
 
         Long product_id,
         double quantity,
-        BigDecimal amount,
         Long user_id
 ) {
 }

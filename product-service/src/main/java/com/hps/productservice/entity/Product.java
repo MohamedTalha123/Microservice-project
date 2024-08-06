@@ -17,12 +17,13 @@ public class Product {
     private Long id;
     //todo: add reference
     //todo: change id type to UUID
-    //todo: add crud for categories
     private String name;
     private String description;
     private double availableQuantity;
     private BigDecimal price;
     private String imageUrl;
+    @Enumerated(EnumType.STRING)
+    private Sexe sexe;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category ;

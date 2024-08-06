@@ -1,6 +1,7 @@
 package com.hps.productservice.controller;
 
 import com.hps.productservice.dto.*;
+import com.hps.productservice.entity.Sexe;
 import com.hps.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,12 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getProductById(@PathVariable ("productId") Long productId){
         return ResponseEntity.ok( productService.getProductById(productId));
     }
+//    @GetMapping("/sexe/{sexe}")
+//    public ResponseEntity<List<ProductResponse>> findProductsBySexe(@PathVariable String sexe) {
+//        Sexe sexeEnum = Sexe.valueOf(sexe.toUpperCase());
+//        List<ProductResponse> products = productService.findProductsBySexe(sexeEnum);
+//        return ResponseEntity.ok(products);
+//    }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAll(){
