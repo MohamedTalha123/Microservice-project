@@ -16,6 +16,11 @@ eureka:
       defaultZone: http://localhost:8089/eureka/
     register-with-eureka: true
     fetch-registry: true
+logging:
+  level:
+    com:
+      hps:
+        product-service: DEBUG
 
 server:
   port: 8081

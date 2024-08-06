@@ -19,9 +19,14 @@ public class ProductController {
         return ResponseEntity.ok(productService.createProduct(request));
     }
 
-    @PostMapping("/purchase")
-    public ResponseEntity<List<ProductPurchaseResponse>> purchaseProduct(@RequestBody List<ProductPurchaseRequest> request){
-        return ResponseEntity.ok(productService.purchaseProduct(request));
+    @PostMapping("/check")
+    public ResponseEntity<Boolean> checkProductAvailability(@RequestBody ProductPurchaseRequest request){
+        boolean isAvailable = productService.checkProductAvailability(request);
+        return ResponseEntity.ok(isAvailable);
+    }
+    @PostMapping("/update")
+    public ResponseEntity<Boolean> updateProductsQuantity(@RequestBody List<ProductPurchaseRequest> request) {
+        return ResponseEntity.ok(productService.updateProductsQuantity(request));
     }
     
     @GetMapping("/{productId}")

@@ -1,7 +1,7 @@
 package com.hps.productservice.dto;
 
 public record ProductPurchaseRequest(
-        Long productId,
+        Long product_id,
         double quantity 
 ) {
 }

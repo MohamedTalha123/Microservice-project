@@ -7,11 +7,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record OrderRequest(
-        Long id,
-        String reference,
+
+        Long product_id,
+        double quantity,
         BigDecimal amount,
-        PaymentMethod paymentMethod,
-        Long user_id,
-        List<PurchaseRequest> products
+        Long user_id
 ) {
 }

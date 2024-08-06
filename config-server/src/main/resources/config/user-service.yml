@@ -8,6 +8,24 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000/realms/Hps-microservice
+      client:
+        registration:
+          keycloak:
+            client-id: hps-back-end
+            client-secret: JlzSi7645HNmrRnmGfYlajBVqsEbo8ua  # Add your client secret here
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            scope: openid
+           # redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"  # Ensure this matches Keycloak settings
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:9000/realms/Hps-microservice
+            user-name-attribute: preferred_username
 
 eureka:
   instance.prefer-ip-address: true
@@ -16,31 +34,6 @@ eureka:
       defaultZone: http://localhost:8089/eureka/
     register-with-eureka: true
     fetch-registry: true
-keycloak:
-  realm: Hps-microservice
-  auth-server-url: http://localhost:9000/auth
-  resource: user-service
-  credentials:
-    secret: J54Hi1cZjvh9mXH1M4egMYmevkn4aBOJ
-  use-resource-role-mappings: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:9000/auth/realms/Hps-microservice
-  security-constraints:
-    - authRoles:
-        - user
-      securityCollections:
-        - patterns:
-            - /users/*
-    - authRoles:
-        - admin
-      securityCollections:
-        - patterns:
-            - /admin/*
-
-
 
 server:
   port: 8080

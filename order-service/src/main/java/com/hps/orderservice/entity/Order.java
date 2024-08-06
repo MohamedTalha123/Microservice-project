@@ -27,8 +27,8 @@ public class Order {
     private Long userId;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    @OneToMany(mappedBy = "order")
-    private List<OrderLine> orderLines;
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    private List<OrderLineItem> orderLineItems;
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
@@ -36,5 +36,15 @@ public class Order {
     @Column(updatable = false,nullable = false)
     private LocalDateTime lastModifiedDate;
 
+
+    public void addOrderLineItem(OrderLineItem orderLineItem) {
+        orderLineItems.add(orderLineItem);
+        orderLineItem.setOrder(this);
+    }
+
+    public void removeOrderLineItem(OrderLineItem orderLineItem) {
+        orderLineItems.remove(orderLineItem);
+        orderLineItem.setOrder(null);
+    }
 
 }

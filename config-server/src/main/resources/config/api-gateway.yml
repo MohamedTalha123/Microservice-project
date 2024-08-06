@@ -1,12 +1,8 @@
 server:
   port: 8091
-
-spring.application.name: api-gateway
-
-
-
-# add more paths, filters, predicates later.
 spring:
+  application:
+    name: api-gateway
   security:
     oauth2:
       resourceserver:
@@ -25,24 +21,29 @@ spring:
           enabled: true
       routes:
         - id: user-service
-          uri: lb:http://USER-SERVICE
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/api/v1/users/**
         - id: product-service
-          uri: lb:http://PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/api/v1/products/**
+        - id: category-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
             - Path=/api/v1/categories/**
-
-
+        - id: user-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/v1/orders/**
 eureka:
-  instance.prefer-ip-address: true
+  instance:
+    prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8089/eureka/
-
 
 
 # okta:
