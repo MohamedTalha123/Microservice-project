@@ -1,4 +1,4 @@
-package com.hps.orderservice.entity;
+package com.hps.paymentservice;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,4 +11,5 @@ public enum PaymentMethod {
 
     private final String PaymentMethod;
 
-    }
+}
+

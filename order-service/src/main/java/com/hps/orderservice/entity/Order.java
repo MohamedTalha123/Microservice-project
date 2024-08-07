@@ -1,8 +1,11 @@
 package com.hps.orderservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,22 +31,28 @@ public class Order {
 
     private String reference;
 
-    private BigDecimal totalAmount;
+    private BigDecimal totalAmount = new BigDecimal(0);;
 
     private Long userId;
 
+    //can be omitted from here and add it to bill(facture)
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<OrderLineItem> orderLineItems = new ArrayList<>();
 
-    @CreatedDate
+//    @CreatedDate
+    @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+//    @LastModifiedDate
+
+    @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(nullable = false)
     private LocalDateTime lastModifiedDate;
 
@@ -57,15 +66,14 @@ public class Order {
         orderLineItem.setOrder(null);
     }
 
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.lastModifiedDate = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.lastModifiedDate = LocalDateTime.now();
-    }
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createdAt = LocalDateTime.now();
+//        this.lastModifiedDate = LocalDateTime.now();
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate() {
+//        this.lastModifiedDate = LocalDateTime.now();
+//    }
 }

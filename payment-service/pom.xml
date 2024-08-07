@@ -8,26 +8,13 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>com.hps</groupId>
-    <artifactId>product-service</artifactId>
+    <artifactId>payment-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>product-service</name>
-    <description>product-service</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    <name>payment-service</name>
+    <description>payment-service</description>
+
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,24 +41,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--		</dependency>-->
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.security</groupId>-->
-        <!--			<artifactId>spring-security-test</artifactId>-->
-        <!--			<scope>test</scope>-->
-        <!--		</dependency>-->
-
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
-        <!--		</dependency>-->
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.security</groupId>-->
-        <!--			<artifactId>spring-security-oauth2-jose</artifactId>-->
-        <!--		</dependency>-->
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -83,5 +52,17 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>20.80.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vonage</groupId>
+            <artifactId>client</artifactId>
+            <version>6.1.0</version>
+        </dependency>
     </dependencies>
+
 </project>

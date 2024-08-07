@@ -29,9 +29,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAll());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody OrderRequest request) {
-        return ResponseEntity.ok(orderService.updateOrder(id, request));
+    @PutMapping
+    public ResponseEntity<Order> updateOrder(@RequestBody OrderRequest request) {
+        return ResponseEntity.ok(orderService.updateOrder(request));
     }
 
     @DeleteMapping("/{id}")
