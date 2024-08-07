@@ -94,7 +94,7 @@ public class ProductService {
 
     public Long updateProduct(Long productId, ProductRequest request) {
         var product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with the ID:: " + productId));
+                .orElseThrow(() -> new EntityNotFoundException("Brand not found with the ID:: " + productId));
         product.setName(request.name());
         product.setDescription(request.description());
         product.setImageUrl(request.imageUrl());

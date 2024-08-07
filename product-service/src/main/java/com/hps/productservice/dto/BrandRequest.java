@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CategoryRequest {
+public class BrandRequest {
     private Long id;
     private String name;
     private String description;

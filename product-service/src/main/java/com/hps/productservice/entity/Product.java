@@ -25,7 +25,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Sexe sexe;
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category ;
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
 }

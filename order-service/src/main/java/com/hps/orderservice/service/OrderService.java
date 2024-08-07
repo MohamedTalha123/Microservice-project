@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -34,13 +36,11 @@ public class OrderService {
         this.userClient.findUserById(request.user_id())
                 .orElseThrow(() -> new OrderException("Cannot create order :: No user exists with the provided ID"));
 
-        // Build PurchaseRequest to check product availability
         var purchaseRequest = PurchaseRequest.builder()
                 .product_id(request.product_id())
                 .quantity(request.quantity())
                 .build();
 
-        // Check if the product is available
         Boolean isProductAvailable = this.productClient.checkProductAvailability(purchaseRequest);
         if (!isProductAvailable) {
             throw new RuntimeException("Product out of stock");
@@ -49,44 +49,94 @@ public class OrderService {
         var product = this.productClient.getProductById(request.product_id())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Initialize a new Order if necessary
         if (order == null) {
+
             order = Order.builder()
                     .userId(request.user_id())
-                    .reference("REF")
+                    .reference(generateReference())
                     .createdAt(LocalDateTime.now())
                     .lastModifiedDate(LocalDateTime.now())
                     .paymentMethod(PaymentMethod.Stripe)
                     .totalAmount(BigDecimal.ZERO)
                     .build();
             this.orderRepository.save(order);
+            OrderLineItem orderLineItem = OrderLineItem.builder()
+                    .order(order)
+                    .price(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())))
+                    .quantity(request.quantity())
+                    .productId(request.product_id())
+                    .build();
+
+            this.orderLineRepository.save(orderLineItem);
+
+            order.setTotalAmount(order.getTotalAmount().add(orderLineItem.getPrice()));
         }
 
-        // Create OrderLineItem
-        OrderLineItem orderLineItem = OrderLineItem.builder()
-                .order(order)
-                .price(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())))
-                .quantity(request.quantity())
-                .productId(request.product_id())
-                .build();
 
-        // Save OrderLineItem
-        this.orderLineRepository.save(orderLineItem);
 
-        // Update cart total amount
-        order.setTotalAmount(order.getTotalAmount().add(orderLineItem.getPrice()));
-
-        // Save and return the order
         return this.orderRepository.save(order);
     }
     // TODO: Implement the payment process
     // TODO: Call the updateProductsQuantity after the payment
     // TODO: Send the order confirmation through notification-service
+    private String generateReference() {
+        String ref = UUID.randomUUID().toString().substring(0, 8);
+        return "CMD-".concat(ref);
+    }
 
 
+    public Order findOrderById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new OrderException("Order not found with id: " + id));
+    }
+
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
+
+    @Transactional
+    public Order updateOrder(Long id, OrderRequest request) {
+        Order order = findOrderById(id);
+        order.setUserId(request.user_id());
+
+        var product = this.productClient.getProductById(request.product_id())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Find the OrderLineItem to update
+        OrderLineItem orderLineItem = order.getOrderLineItems().stream()
+                .filter(item -> item.getProductId().equals(request.product_id()))
+                .findFirst()
+                .orElse(null);
+
+        // If the OrderLineItem exists, update it. Otherwise, create a new one.
+        if (orderLineItem != null) {
+            orderLineItem.setQuantity(request.quantity());
+            orderLineItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
+        } else {
+            orderLineItem = OrderLineItem.builder()
+                    .order(order)
+                    .price(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())))
+                    .quantity(request.quantity())
+                    .productId(request.product_id())
+                    .build();
+            order.addOrderLineItem(orderLineItem);
+        }
+
+        // Recalculate the total amount for the order
+        BigDecimal totalAmount = order.getOrderLineItems().stream()
+                .map(OrderLineItem::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotalAmount(totalAmount);
+
+        order.setLastModifiedDate(LocalDateTime.now());
+
+        return orderRepository.save(order);
+    }
 
 
-
-
-
+    @Transactional
+    public void deleteOrder(Long id) {
+        Order order = findOrderById(id);
+        orderRepository.delete(order);
+    }
 }

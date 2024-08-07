@@ -1,22 +1,35 @@
 package com.hps.orderservice.mapper;
 
 import com.hps.orderservice.dto.OrderLineRequest;
-import com.hps.orderservice.entity.Order;
+import com.hps.orderservice.dto.OrderLineResponse;
 import com.hps.orderservice.entity.OrderLineItem;
-import lombok.AllArgsConstructor;
+import com.hps.orderservice.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderLineMapper {
-    public OrderLineItem toOrderLine(OrderLineRequest orderLineRequest) {
+    private final OrderRepository orderRepository;
+
+    public OrderLineItem toOrderLine(OrderLineRequest request) {
         return OrderLineItem.builder()
-                .id(orderLineRequest.id())
-                .quantity(orderLineRequest.quantity())
-                .order(Order.builder()
-                        .id(orderLineRequest.orderId())
-                        .build())
-                .productId(orderLineRequest.productId())
+                .order(orderRepository.findById(request.orderId()).orElseThrow(() -> new RuntimeException("Order not found")))
+                .productId(request.productId())
+                .quantity(request.quantity())
+                .build();
+    }
+
+    public OrderLineResponse toOrderLineResponse(OrderLineItem orderLineItem) {
+        return OrderLineResponse.builder()
+                .id(orderLineItem.getId())
+                .orderId(orderLineItem.getOrder().getId())
+                .productId(orderLineItem.getProductId())
+                .quantity(orderLineItem.getQuantity())
+                .price(orderLineItem.getPrice())
+                .productPrice(orderLineItem.getPrice().divide(BigDecimal.valueOf(orderLineItem.getQuantity()), BigDecimal.ROUND_HALF_UP))
                 .build();
     }
 }

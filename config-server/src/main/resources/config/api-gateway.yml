@@ -28,14 +28,20 @@ spring:
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/api/v1/products/**
-        - id: category-service
+        - id: brand-service
           uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/api/v1/categories/**
-        - id: user-service
+            - Path=/api/v1/brands/**
+        - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/api/v1/orders/**
+        - id: order-line-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/v1/order-line-items/**
+
+
 eureka:
   instance:
     prefer-ip-address: true

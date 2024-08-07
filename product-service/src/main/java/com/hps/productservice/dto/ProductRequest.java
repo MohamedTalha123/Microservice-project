@@ -12,6 +12,6 @@ public record ProductRequest(
          BigDecimal price,
          String imageUrl,
          Sexe sexe,
-         Long categoryId
+         Long brandId
 ) {
 }

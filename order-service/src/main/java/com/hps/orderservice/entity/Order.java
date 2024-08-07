@@ -1,5 +1,6 @@
 package com.hps.orderservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,6 +36,7 @@ public class Order {
     private PaymentMethod paymentMethod;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<OrderLineItem> orderLineItems = new ArrayList<>();
 
     @CreatedDate
@@ -45,5 +47,25 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime lastModifiedDate;
 
+    public void addOrderLineItem(OrderLineItem orderLineItem) {
+        orderLineItems.add(orderLineItem);
+        orderLineItem.setOrder(this);
+    }
 
+    public void removeOrderLineItem(OrderLineItem orderLineItem) {
+        orderLineItems.remove(orderLineItem);
+        orderLineItem.setOrder(null);
+    }
+
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 }

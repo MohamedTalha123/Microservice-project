@@ -13,8 +13,8 @@ public record ProductResponse(
         BigDecimal price,
         String imageUrl,
         Sexe sexe,
-        Long categoryId,
-        String categoryName,
-        String categoryDescription
+        Long brandId,
+        String brandName,
+        String cbrandDescription
 ) {
 }

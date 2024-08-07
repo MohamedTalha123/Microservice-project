@@ -3,7 +3,7 @@ package com.hps.productservice.mapper;
 import com.hps.productservice.dto.ProductPurchaseResponse;
 import com.hps.productservice.dto.ProductRequest;
 import com.hps.productservice.dto.ProductResponse;
-import com.hps.productservice.entity.Category;
+import com.hps.productservice.entity.Brand;
 import com.hps.productservice.entity.Product;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ public class ProductMapper {
                 .availableQuantity(request.availableQuantity())
                 .imageUrl(request.imageUrl())
                 .sexe(request.sexe())
-                .category(Category.builder()
-                        .id(request.categoryId())
+                .brand(Brand.builder()
+                        .id(request.brandId())
                         .build()
                 )
                 .build();
@@ -35,9 +35,9 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getImageUrl(),
                 product.getSexe(),
-                product.getCategory().getId(),
-                product.getCategory().getName(),
-                product.getCategory().getDescription()
+                product.getBrand().getId(),
+                product.getBrand().getName(),
+                product.getBrand().getDescription()
         );
     }
 

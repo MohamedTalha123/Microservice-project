@@ -12,12 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Category {
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-    @OneToMany(mappedBy = "category" , cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "brand" , cascade = CascadeType.ALL )
     private List<Product> products;
 }
