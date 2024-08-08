@@ -24,6 +24,6 @@ application:
   config:
     user-url: http://localhost:8091/api/v1/users
     product-url: http://localhost:8091/api/v1/products
-    payment-url: http://localhost:8091/api/v1/payments
+
 
 

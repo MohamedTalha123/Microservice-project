@@ -1,4 +1,4 @@
-package com.hps.paymentservice;
+package com.hps.paymentservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
@@ -14,7 +14,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
@@ -42,6 +41,7 @@ public class Bill {
     private LocalDateTime createdAt;
 
     private Long clientId;
+
     private Long orderId;
 
 }

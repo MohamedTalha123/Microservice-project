@@ -1,6 +1,7 @@
 package com.hps.orderservice.service;
 
 
+import com.hps.orderservice.dto.OrderLineRequest;
 import com.hps.orderservice.dto.OrderRequest;
 import com.hps.orderservice.dto.PurchaseRequest;
 import com.hps.orderservice.entity.Order;
@@ -31,6 +32,7 @@ public class OrderService {
     private final UserClient userClient;
     private final ProductClient productClient;
     public static Order order;
+
     @Transactional
     public Order createOrder(OrderRequest request) {
         this.userClient.findUserById(request.user_id())
@@ -50,11 +52,9 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (order == null) {
-
             order = Order.builder()
                     .userId(request.user_id())
                     .reference(generateReference())
-                    //.createdAt(LocalDateTime.now())
                     .lastModifiedDate(LocalDateTime.now())
                     .paymentMethod(PaymentMethod.STRIPE)
                     .totalAmount(BigDecimal.ZERO)
@@ -72,7 +72,6 @@ public class OrderService {
             this.orderLineRepository.save(orderLineItem);
 
             order.setTotalAmount(order.getTotalAmount().add(orderLineItem.getPrice()));
-       // }
 
         return this.orderRepository.save(order);
     }
@@ -94,52 +93,47 @@ public class OrderService {
     }
 
     @Transactional
-    public Order updateOrder(OrderRequest request) {
-        //Order order = findOrderById(id);
-        //order.setUserId(request.user_id());
+    public Order updateOrder( OrderRequest request) {
 
         var product = this.productClient.getProductById(request.product_id())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Find the OrderLineItem to update
         OrderLineItem orderLineItem = order.getOrderLineItems().stream()
                 .filter(item -> item.getProductId().equals(request.product_id()))
                 .findFirst()
-                .orElse(null);
-
-        // If the OrderLineItem exists, update it. Otherwise, create a new one.
-        if (orderLineItem == null) {
-           throw  new NullPointerException("orderLineItem not found");
-        }
+                .orElseThrow(() -> new NullPointerException("OrderLineItem not found"));
 
         orderLineItem.setQuantity(request.quantity());
         orderLineItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
+        if (request.quantity()==0){
+            this.orderLineRepository.delete(orderLineItem);
+        }
         this.orderLineRepository.save(orderLineItem);
 
-//        } else {
-//            orderLineItem = OrderLineItem.builder()
-//                    .order(order)
-//                    .price(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())))
-//                    .quantity(request.quantity())
-//                    .productId(request.product_id())
-//                    .build();
-//            order.addOrderLineItem(orderLineItem);
-//        }
-
-        // Recalculate the total amount for the order
         BigDecimal totalAmount = order.getOrderLineItems().stream()
                 .map(OrderLineItem::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         order.setTotalAmount(totalAmount);
 
-//        order.setLastModifiedDate(LocalDateTime.now());
-
         return orderRepository.save(order);
     }
 
     @Transactional
-    public void deleteOrder(Long id) {
+    public void deleteOrderById(Long id) {
         Order order = findOrderById(id);
         orderRepository.delete(order);
     }
-}
+    public String checkout(){
+
+    }
+    }
+
+//    @Transactional
+//    public void deleteOrder() {
+//        if (order != null){
+//            orderRepository.delete(order);
+//        }
+//
+//    }
+
+

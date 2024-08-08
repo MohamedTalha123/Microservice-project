@@ -1,7 +1,9 @@
 package com.hps.orderservice.controller;
 
+import com.hps.orderservice.dto.OrderLineRequest;
 import com.hps.orderservice.dto.OrderRequest;
 import com.hps.orderservice.entity.Order;
+import com.hps.orderservice.entity.OrderLineItem;
 import com.hps.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +31,17 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAll());
     }
 
-    @PutMapping
-    public ResponseEntity<Order> updateOrder(@RequestBody OrderRequest request) {
-        return ResponseEntity.ok(orderService.updateOrder(request));
+    @PutMapping("")
+    public ResponseEntity<Order> updateOrder( @RequestBody OrderRequest request) {
+        return ResponseEntity.ok(orderService.updateOrder( request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        orderService.deleteOrder(id);
+    public ResponseEntity<Void> deleteOrderById(@PathVariable Long id) {
+        orderService.deleteOrderById(id);
         return ResponseEntity.noContent().build();
     }
+
+
     
 }

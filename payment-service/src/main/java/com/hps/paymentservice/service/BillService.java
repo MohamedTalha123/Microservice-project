@@ -1,6 +1,12 @@
-package com.hps.paymentservice;
+package com.hps.paymentservice.service;
 
 
+import com.hps.paymentservice.dto.PurchaseRequest;
+import com.hps.paymentservice.repository.BillRepo;
+import com.hps.paymentservice.dto.BillRequest;
+import com.hps.paymentservice.dto.PaymentInfo;
+import com.hps.paymentservice.entity.PaymentMethod;
+import com.hps.paymentservice.entity.Bill;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -25,6 +31,7 @@ public class BillService {
 
     @Value("${password.choices.5}")
     private String numeric;
+
 
 
     public Bill createBill(BillRequest billRequest){
@@ -80,6 +87,11 @@ public class BillService {
             if (minutes <= 5) {
                 //todo : set the bill as paid and update products accordingly
                 //complete the payment process
+                appBill.setPaid(Boolean.TRUE);
+//                var purchaseRequest = PurchaseRequest.builder()
+//                        .product_id(request.product_id())
+//                        .quantity(request.quantity())
+//                        .build();
 
                 return "Balance updated and bill paid";
             } else return "Verification code expired, try again !";

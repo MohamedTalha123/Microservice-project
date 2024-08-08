@@ -1,4 +1,4 @@
-package com.hps.paymentservice;
+package com.hps.paymentservice.dto;
 
 import lombok.Data;
 

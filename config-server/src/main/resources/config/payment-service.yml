@@ -19,3 +19,6 @@ eureka:
 
 server:
   port: 8083
+application:
+  config:
+    payment-url: http://localhost:8091/api/v1/payments
