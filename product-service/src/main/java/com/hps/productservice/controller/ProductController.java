@@ -1,12 +1,14 @@
 package com.hps.productservice.controller;
 
 import com.hps.productservice.dto.*;
-import com.hps.productservice.entity.Sexe;
+import com.hps.productservice.entity.Product;
 import com.hps.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -54,6 +56,19 @@ public class ProductController {
     public ResponseEntity<Long> updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(productId, request));
     }
+    @GetMapping("/reference/{reference}")
+    public ResponseEntity<Optional<ProductResponse>> getProductByReference(@PathVariable ("reference") String reference){
+        return ResponseEntity.ok( productService.getProductByReference(reference));
+    }
+    @GetMapping("/list/{ids}")
+    public ResponseEntity<List<Product>> findAllByIds(@PathVariable Set<Long> ids) {
+        List<Product> products = productService.findAllById(ids);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(products);
+    }
+
 
 
 

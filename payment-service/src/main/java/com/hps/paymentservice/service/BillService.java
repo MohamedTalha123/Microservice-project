@@ -40,7 +40,7 @@ public class BillService {
                         .clientId(billRequest.getClientId())
                         .orderId(billRequest.getOrderId())
                         .paid(Boolean.FALSE)
-                        .totalAmount(BigDecimal.ZERO)
+                        .totalAmount(billRequest.getAmount())
                         .paymentMethod(PaymentMethod.STRIPE)
                         .build()
         );
@@ -69,9 +69,12 @@ public class BillService {
         System.out.println(verificationCode);
         appBill.setVerificationCode(verificationCode);
         appBill.setVerificationCodeSentAt(LocalDateTime.now());
+        billRepo.save(appBill);
+        //todo : call notif-service
 
         return "Check sms to verify payment";
     }
+
 
 
     public String confirmBillPayment(String verificationCode){
@@ -111,9 +114,9 @@ public class BillService {
 
     String generateVerificationCode(Bill bill, String phone){
         String verificationCode = passwordForSms();
-        String verificationMssg = generateSms(verificationCode, bill);
-//        smsService.sendSMS(phone, verificationMssg);
-        return verificationCode;
+        return  generateSms(verificationCode, bill);
+
+
     }
 
     private String generateSms(String verificationCode, Bill bill){

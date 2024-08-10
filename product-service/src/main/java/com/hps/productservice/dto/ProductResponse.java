@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public record ProductResponse(
         Long id,
         String description,
+        String reference,
         String name,
         double availableQuantity,
         BigDecimal price,
@@ -15,6 +16,6 @@ public record ProductResponse(
         Sexe sexe,
         Long brandId,
         String brandName,
-        String cbrandDescription
+        String brandDescription
 ) {
 }

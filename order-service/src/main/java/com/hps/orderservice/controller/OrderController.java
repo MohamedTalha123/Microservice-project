@@ -1,7 +1,6 @@
 package com.hps.orderservice.controller;
 
-import com.hps.orderservice.dto.OrderLineRequest;
-import com.hps.orderservice.dto.OrderRequest;
+import com.hps.orderservice.dto.*;
 import com.hps.orderservice.entity.Order;
 import com.hps.orderservice.entity.OrderLineItem;
 import com.hps.orderservice.service.OrderService;
@@ -31,15 +30,25 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAll());
     }
 
-    @PutMapping("")
+    @PutMapping()
     public ResponseEntity<Order> updateOrder( @RequestBody OrderRequest request) {
         return ResponseEntity.ok(orderService.updateOrder( request));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderById(@PathVariable Long id) {
-        orderService.deleteOrderById(id);
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteOrderById() {
+        orderService.deleteOrderById();
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/checkout")
+    public ResponseEntity<BillResponse> checkout(@RequestBody BillRequest billRequest) {
+        BillResponse response = orderService.checkout(billRequest);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/summary")
+    public ResponseEntity<List<OrderLineResponse>> summaryCheckoutProducts() {
+        List<OrderLineResponse> orderLineResponses = orderService.summaryCheckoutProducts();
+        return ResponseEntity.ok(orderLineResponses);
     }
 
 

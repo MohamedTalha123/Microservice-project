@@ -26,10 +26,10 @@ public class OrderLineMapper {
         return OrderLineResponse.builder()
                 .id(orderLineItem.getId())
                 .orderId(orderLineItem.getOrder().getId())
-                .productId(orderLineItem.getProductId())
+                .productReference(orderLineItem.getProductReference())
                 .quantity(orderLineItem.getQuantity())
-                .price(orderLineItem.getPrice())
-                .productPrice(orderLineItem.getPrice().divide(BigDecimal.valueOf(orderLineItem.getQuantity()), BigDecimal.ROUND_HALF_UP))
+                .totalPrice(orderLineItem.getPrice())
+                .unitPrice(orderLineItem.getPrice().divide(BigDecimal.valueOf(orderLineItem.getQuantity()), BigDecimal.ROUND_HALF_UP))
                 .build();
     }
 }

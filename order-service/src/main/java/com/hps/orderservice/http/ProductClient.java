@@ -4,6 +4,7 @@ import com.hps.orderservice.dto.ProductResponse;
 import com.hps.orderservice.dto.PurchaseRequest;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @FeignClient(
         name = "product-service",
@@ -23,6 +25,9 @@ public interface ProductClient {
     Boolean updateProductsQuantity(@RequestBody List<PurchaseRequest> purchaseRequest);
     @GetMapping("/{productId}")
     Optional<ProductResponse> getProductById(@PathVariable("productId") Long productId);
+
+    @GetMapping("{ids}")
+    ResponseEntity<List<ProductResponse>> findAllByIds(@PathVariable Set<Long> ids);
 
 }
 

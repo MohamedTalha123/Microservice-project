@@ -5,8 +5,6 @@ import com.hps.productservice.dto.ProductPurchaseResponse;
 import com.hps.productservice.dto.ProductRequest;
 import com.hps.productservice.dto.ProductResponse;
 import com.hps.productservice.entity.Product;
-import com.hps.productservice.entity.Sexe;
-import com.hps.productservice.exception.ProductPurchaseException;
 import com.hps.productservice.mapper.ProductMapper;
 import com.hps.productservice.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -80,6 +78,10 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with the ID:: "+productId))
                 ;
     }
+    public Optional<ProductResponse> getProductByReference(String reference) {
+        return productRepository.findByReference(reference)
+                ;
+    }
 
     public List<ProductResponse> findAll() {
         return productRepository.findAll()
@@ -103,6 +105,10 @@ public class ProductService {
         product.setSexe(request.sexe());
         return productRepository.save(product).getId();
     }
+      public  List<Product>findAllById(Set<Long>
+                                       ids){
+        return productRepository.findAllById(ids);
+      }
 
 //    public List<ProductResponse> findProductsBySexe(Sexe sexe) {
 //        return productRepository.findAllBySexe(sexe)

@@ -1,12 +1,14 @@
-package com.hps.paymentservice.dto;
+package com.hps.orderservice.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class BillRequest {
+@Builder
 
+public class BillRequest {
     private String phone;
 
     private Long clientId;
@@ -14,5 +16,4 @@ public class BillRequest {
     private Long orderId;
 
     private BigDecimal amount;
-
 }
