@@ -7,14 +7,18 @@ import com.hps.productservice.entity.Brand;
 import com.hps.productservice.entity.Product;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ProductMapper {
 
     public Product toProduct(ProductRequest request) {
         return Product.builder()
-                .id(request.id())
-                .name(request.name())
+
+
                 .description(request.description())
+                .reference(generateReference())
+                .name(request.name())
                 .price(request.price())
                 .availableQuantity(request.availableQuantity())
                 .imageUrl(request.imageUrl())
@@ -26,11 +30,14 @@ public class ProductMapper {
                 .build();
     }
 
+
     public ProductResponse toProductResponse(Product product) {
         return new ProductResponse(
                 product.getId(),
-                product.getName(),
+
                 product.getDescription(),
+                product.getReference(),
+                product.getName(),
                 product.getAvailableQuantity(),
                 product.getPrice(),
                 product.getImageUrl(),
@@ -39,6 +46,10 @@ public class ProductMapper {
                 product.getBrand().getName(),
                 product.getBrand().getDescription()
         );
+    }
+    private String generateReference() {
+        String ref = UUID.randomUUID().toString().substring(0, 8);
+        return "PP-".concat(ref);
     }
 
     public ProductPurchaseResponse toProductPurchaseResponse(Product product, double quantity) {

@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
 //    List<ProductResponse> findAllBySexe(Sexe sexe);
+    Optional<ProductResponse> findByReference (String reference);
 }

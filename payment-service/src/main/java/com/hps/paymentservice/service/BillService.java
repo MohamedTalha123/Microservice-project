@@ -54,7 +54,7 @@ public class BillService {
                         .orderId(billRequest.getOrderId())
                         .paid(Boolean.FALSE)
                         .billReference("BILL-".concat(ref) )
-                        .totalAmount(BigDecimal.ZERO)
+                        .totalAmount(billRequest.getAmount())
                         .paymentMethod(PaymentMethod.STRIPE)
                         .build()
         );
@@ -66,7 +66,6 @@ public class BillService {
 
         List<String> paymentMethodTypes = new ArrayList<>();
         paymentMethodTypes.add("card");
-
         Map<String, Object> params = new HashMap<>();
         params.put("amount", paymentInfo.getAmount());
         params.put("currency", paymentInfo.getCurrency());
@@ -84,12 +83,10 @@ public class BillService {
         appBill.setVerificationCode(verificationCode);
         appBill.setVerificationCodeSentAt(LocalDateTime.now());
         billRepo.save(appBill);
-
         sendNotification(billRequest.getPhone(), verificationCode ,"OTP" );
 
         return "Check sms to verify payment";
     }
-
 
     public String confirmBillPayment(String verificationCode){
         int minutes = (int) ChronoUnit.MINUTES.between(appBill.getVerificationCodeSentAt(), LocalDateTime.now());
@@ -122,7 +119,7 @@ public class BillService {
                 .factureReference(appBill.getBillReference())
                 .totalAmount(appBill.getTotalAmount())
                 .build();
-        if (code != null){
+        if (code != null) {
             notificationRequest.setCode(code);
         }
         if (msgType.equals("OTP")) {

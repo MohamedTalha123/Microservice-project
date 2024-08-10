@@ -8,11 +8,13 @@ import java.math.BigDecimal;
 @Data
 @Getter
 @Setter
+
 public class OrderLineResponse {
     private Long id;
     private Long orderId;
-    private Long productId;
+    private String productReference;
+    private String name;
     private double quantity;
-    private BigDecimal productPrice;
-    private BigDecimal price;
+    private BigDecimal unitPrice;
+    private BigDecimal totalPrice;
 }

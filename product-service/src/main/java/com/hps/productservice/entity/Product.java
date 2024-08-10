@@ -15,10 +15,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //todo: add reference
+
     //todo: change id type to UUID
-    private String name;
     private String description;
+    private String reference;
+    private String name;
     private double availableQuantity;
     private BigDecimal price;
     private String imageUrl;
