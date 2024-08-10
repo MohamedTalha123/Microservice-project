@@ -26,12 +26,15 @@ public class Bill {
     private Long id;
     @ColumnDefault("0")
     private BigDecimal totalAmount = new BigDecimal(0);
+
     @Column(columnDefinition = "tinyint(1) default 0")
     private Boolean paid = Boolean.FALSE;
 
     @JsonIgnore
     private String verificationCode;
     private LocalDateTime verificationCodeSentAt;
+
+    private String billReference;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;

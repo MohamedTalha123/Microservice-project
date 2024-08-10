@@ -1,0 +1,56 @@
+server:
+  port: 8086
+
+spring.application.name: notification-service
+
+management:
+  endpoint:
+    health:
+      probes.enabled: true
+      livenessState.enabled: true
+      readinessState.enabled: true
+
+spring:
+  cloud:
+    kubernetes:
+      loadbalancer:
+        enabled: false
+      discovery:
+        enabled: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  datasource:
+    url: jdbc:mysql://localhost:3307/notificationDB
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: secret
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+notification:
+  exchange: notificationExchange
+  queues:
+    msgQueue: msgQueue
+    otpQueue: otpQueue
+  msgRoutingKey: msgRoutingKey
+  otpRoutingKey: otpRoutingKey
+
+
+vonage:
+  api:
+    key:  key(..)
+    secret: secret(..)
+
+eureka:
+  instance.prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8089/eureka/

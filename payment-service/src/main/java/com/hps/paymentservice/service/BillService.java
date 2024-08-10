@@ -1,7 +1,7 @@
 package com.hps.paymentservice.service;
 
 
-import com.hps.paymentservice.dto.PurchaseRequest;
+import com.hps.paymentservice.dto.NotificationRequest;
 import com.hps.paymentservice.repository.BillRepo;
 import com.hps.paymentservice.dto.BillRequest;
 import com.hps.paymentservice.dto.PaymentInfo;
@@ -11,6 +11,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,18 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BillService {
 
+    private final RabbitTemplate rabbitTemplate;
+
+
+    @Value("${notification.msgRoutingKey}")
+    private String msgRoutingKey;
+
+    @Value("${notification.otpRoutingKey}")
+    private String otpRoutingKey;
+
+    @Value("${notification.exchange}")
+    private String exchangeName;
+
     public static Bill appBill;
     private final BillRepo billRepo;
 
@@ -32,14 +45,15 @@ public class BillService {
     @Value("${password.choices.5}")
     private String numeric;
 
-
-
     public Bill createBill(BillRequest billRequest){
+        String ref = UUID.randomUUID().toString();
+
         appBill = billRepo.save(
                 Bill.builder()
                         .clientId(billRequest.getClientId())
                         .orderId(billRequest.getOrderId())
                         .paid(Boolean.FALSE)
+                        .billReference("BILL-".concat(ref) )
                         .totalAmount(BigDecimal.ZERO)
                         .paymentMethod(PaymentMethod.STRIPE)
                         .build()
@@ -64,20 +78,20 @@ public class BillService {
     }
 
     public String payBill(BillRequest billRequest){
-
-        String verificationCode = generateVerificationCode(appBill, billRequest.getPhone());
+        String verificationCode = passwordForSms();
         System.out.println(verificationCode);
+
         appBill.setVerificationCode(verificationCode);
         appBill.setVerificationCodeSentAt(LocalDateTime.now());
+        billRepo.save(appBill);
+
+        sendNotification(billRequest.getPhone(), verificationCode ,"OTP" );
 
         return "Check sms to verify payment";
     }
 
 
     public String confirmBillPayment(String verificationCode){
-//        String phone = (String) SecurityContextHolder.getContext().getAuthentication().getName();
-//        Client client = clientRepo.findByPhone(phone.split(":")[0]).orElseThrow();
-
         int minutes = (int) ChronoUnit.MINUTES.between(appBill.getVerificationCodeSentAt(), LocalDateTime.now());
         System.out.println(appBill.getVerificationCode());
         System.out.println(verificationCode);
@@ -85,41 +99,36 @@ public class BillService {
 
         if ( appBill.getVerificationCode().equals(verificationCode)) {
             if (minutes <= 5) {
-                //todo : set the bill as paid and update products accordingly
-                //complete the payment process
                 appBill.setPaid(Boolean.TRUE);
-//                var purchaseRequest = PurchaseRequest.builder()
-//                        .product_id(request.product_id())
-//                        .quantity(request.quantity())
-//                        .build();
+                billRepo.save(appBill);
 
-                return "Balance updated and bill paid";
+                appBill = null;
+                return "Bill paid";
             } else return "Verification code expired, try again !";
         }
-        return "Wrong code";
+        return "Wrong code, try again !";
     }
-
-
 
     public String passwordForSms(){
-        String password = "";
+        StringBuilder password = new StringBuilder();
         for (int i = 0; i < 5; i++){
-            password += numeric.charAt(new Random().nextInt(numeric.length()));
+            password.append(numeric.charAt(new Random().nextInt(numeric.length())));
         }
-        return password;
+        return password.toString();
     }
-
-    String generateVerificationCode(Bill bill, String phone){
-        String verificationCode = passwordForSms();
-        String verificationMssg = generateSms(verificationCode, bill);
-//        smsService.sendSMS(phone, verificationMssg);
-        return verificationCode;
-    }
-
-    private String generateSms(String verificationCode, Bill bill){
-        return verificationCode+ " est le code de confirmation pour votre payement pour " +
-                "un montant de "+ bill.getTotalAmount()+
-                " MAD.\n" +
-                "Ce code expire dans 5 minutes.";
+    public void sendNotification(String phone, String code, String msgType) {
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .phone(phone)
+                .factureReference(appBill.getBillReference())
+                .totalAmount(appBill.getTotalAmount())
+                .build();
+        if (code != null){
+            notificationRequest.setCode(code);
+        }
+        if (msgType.equals("OTP")) {
+            rabbitTemplate.convertAndSend(exchangeName, otpRoutingKey, notificationRequest);
+            return;
+        }
+        rabbitTemplate.convertAndSend(exchangeName, msgRoutingKey, notificationRequest);
     }
 }

@@ -19,6 +19,24 @@ eureka:
 
 server:
   port: 8083
+
+password:
+  choices:
+    5: 0123456789
+
+stripe:
+  key:
+    secret: sk_test_51PlWAM2K4zodnfhoV9o8ozoHeFcvMw6fjufUtWLQi60Ct4evKmP92ACkKjLSGBI3A0LGfikdsR4zx5giEOCoV7Ba00mKjnrxht
+
+notification:
+  exchange: notificationExchange
+  queues:
+    msgQueue: msgQueue
+    otpQueue: otpQueue
+  msgRoutingKey: msgRoutingKey
+  otpRoutingKey: otpRoutingKey
+
+
 application:
   config:
     payment-url: http://localhost:8091/api/v1/payments
