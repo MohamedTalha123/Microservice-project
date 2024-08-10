@@ -163,6 +163,7 @@ public class OrderService {
             ProductResponse productResponse = productMap.get(productId);
 
             OrderLineResponse orderLineResponse = OrderLineResponse.builder()
+                    .id(productResponse.getId())
                     .orderId(order.getId())
                     .productReference(productResponse.getReference())
                     .name(productResponse.getName())
