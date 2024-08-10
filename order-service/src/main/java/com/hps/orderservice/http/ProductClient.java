@@ -26,8 +26,8 @@ public interface ProductClient {
     @GetMapping("/{productId}")
     Optional<ProductResponse> getProductById(@PathVariable("productId") Long productId);
 
-    @GetMapping("{ids}")
-    ResponseEntity<List<ProductResponse>> findAllByIds(@PathVariable Set<Long> ids);
+    @GetMapping("{id}")
+    ResponseEntity<List<ProductResponse>> findAllById(@PathVariable Set<Long> id);
 
 }
 

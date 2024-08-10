@@ -40,7 +40,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonManagedReference
     @JsonIgnore
     private List<OrderLineItem> orderLineItems = new ArrayList<>();

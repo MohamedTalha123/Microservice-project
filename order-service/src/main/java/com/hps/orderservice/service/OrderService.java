@@ -141,14 +141,19 @@ public class OrderService {
     }
     public List<OrderLineResponse> summaryCheckoutProducts(){
 
-        List<OrderLineResponse> orderLineItemsProducts = new ArrayList<OrderLineResponse>();
+        List<OrderLineResponse> orderLineItemsProducts = new ArrayList<>();
 
         List<OrderLineItem> orderLineItems = orderLineRepository.findAllByOrder(order);
 
         Map<Long, OrderLineItem> orderLineMap = orderLineItems
                 .stream()
                 .collect(Collectors.toMap(OrderLineItem::getProductId, orderLineItem -> orderLineItem));
-        List<ProductResponse> products = productClient.findAllByIds(orderLineMap.keySet()).getBody();
+
+
+
+
+        List<ProductResponse> products = productClient.findAllById(orderLineMap.keySet()).getBody();
+        System.out.println("PRODUCTS ::::"+products);
         Map<Long, ProductResponse> productMap = products.stream()
                 .collect(Collectors.toMap(ProductResponse::getId, product -> product));
 

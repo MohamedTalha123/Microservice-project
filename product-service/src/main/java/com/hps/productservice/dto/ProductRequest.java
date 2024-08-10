@@ -5,9 +5,9 @@ import com.hps.productservice.entity.Sexe;
 import java.math.BigDecimal;
 
 public record ProductRequest(
-         Long id,
+        String name,
          String description,
-         String name,
+
          double availableQuantity,
          BigDecimal price,
          String imageUrl,

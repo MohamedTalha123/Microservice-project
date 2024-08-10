@@ -110,6 +110,7 @@ public class ProductService {
         return productRepository.findAllById(ids);
       }
 
+
 //    public List<ProductResponse> findProductsBySexe(Sexe sexe) {
 //        return productRepository.findAllBySexe(sexe)
 //                .stream()
