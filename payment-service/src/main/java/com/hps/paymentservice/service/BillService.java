@@ -90,17 +90,28 @@ public class BillService {
 
     public String confirmBillPayment(String verificationCode){
         int minutes = (int) ChronoUnit.MINUTES.between(appBill.getVerificationCodeSentAt(), LocalDateTime.now());
-        System.out.println(appBill.getVerificationCode());
-        System.out.println(verificationCode);
-        System.out.println(minutes);
-
         if ( appBill.getVerificationCode().equals(verificationCode)) {
             if (minutes <= 5) {
-                appBill.setPaid(Boolean.TRUE);
-                billRepo.save(appBill);
+                try {
+                    PaymentInfo paymentInfo = new PaymentInfo();
+                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue());
+                    paymentInfo.setCurrency("USD");
+                    paymentInfo.setReceiptEmail("boujrah.yahya@gmail.com");
 
-                appBill = null;
-                return "Bill paid";
+                    PaymentIntent paymentIntent = createPaymentIntent(paymentInfo);
+                    //not sure
+                    if ("succeeded".equals(paymentIntent.getStatus())) {
+                        appBill.setPaid(Boolean.TRUE);
+                        billRepo.save(appBill);
+                        appBill = null;
+                        return "Bill paid successfully";
+                    } else {
+                        return "Payment failed, status: " + paymentIntent.getStatus();
+                    }
+
+                } catch (StripeException e) {
+                    return "Payment failed: " + e.getMessage();
+                }
             } else return "Verification code expired, try again !";
         }
         return "Wrong code, try again !";

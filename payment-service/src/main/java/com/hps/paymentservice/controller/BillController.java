@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class BillController {
     private final BillService billService;
 
-    @PostMapping("/create-intent")
-    public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo) throws StripeException {
-        PaymentIntent paymentIntent = billService.createPaymentIntent(paymentInfo);
-        String paymentStr = paymentIntent.toJson();
-        return ResponseEntity.ok(paymentStr);
-    }
+//    @PostMapping("/create-intent")
+//    public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo) throws StripeException {
+//        PaymentIntent paymentIntent = billService.createPaymentIntent(paymentInfo);
+//        String paymentStr = paymentIntent.toJson();
+//        return ResponseEntity.ok(paymentStr);
+//    }
     @PostMapping("/create-bill")
     public ResponseEntity<Bill> createBill(@RequestBody BillRequest billRequest) {
         Bill bill = billService.createBill(billRequest);

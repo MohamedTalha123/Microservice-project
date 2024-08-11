@@ -149,9 +149,6 @@ public class OrderService {
                 .stream()
                 .collect(Collectors.toMap(OrderLineItem::getProductId, orderLineItem -> orderLineItem));
 
-
-
-
         List<ProductResponse> products = productClient.findAllById(orderLineMap.keySet()).getBody();
         System.out.println("PRODUCTS ::::"+products);
         Map<Long, ProductResponse> productMap = products.stream()
@@ -176,5 +173,13 @@ public class OrderService {
         }
 
         return orderLineItemsProducts;
+    }
+
+    public void payBill() {
+        //todo: call paybill from payment service
+    }
+
+    public void confirmPayment(){
+        //todo: call confirmPayment from payment service
     }
 }
