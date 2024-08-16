@@ -13,6 +13,7 @@ public class BrandMapper {
                 .id(request.getId())
                 .name(request.getName())
                 .description(request.getDescription())
+                .imageUrl(request.getImageUrl())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class BrandMapper {
                 .id(brand.getId())
                 .name(brand.getName())
                 .description(brand.getDescription())
+                .imageUrl(brand.getImageUrl())
                 .build();
     }
 }

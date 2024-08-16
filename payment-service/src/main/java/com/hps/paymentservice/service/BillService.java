@@ -94,7 +94,7 @@ public class BillService {
             if (minutes <= 5) {
                 try {
                     PaymentInfo paymentInfo = new PaymentInfo();
-                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue());
+                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(1)).intValue());
                     paymentInfo.setCurrency("USD");
                     paymentInfo.setReceiptEmail("mouad10cherrat@gmail.com");
 

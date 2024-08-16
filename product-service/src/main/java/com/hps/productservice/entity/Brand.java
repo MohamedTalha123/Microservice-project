@@ -18,6 +18,7 @@ public class Brand {
     private Long id;
     private String name;
     private String description;
+    private String imageUrl;
     @OneToMany(mappedBy = "brand" , cascade = CascadeType.ALL )
     private List<Product> products;
 }
