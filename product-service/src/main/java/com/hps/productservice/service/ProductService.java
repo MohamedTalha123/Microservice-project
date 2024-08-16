@@ -109,6 +109,12 @@ public class ProductService {
                                        ids){
         return productRepository.findAllById(ids);
       }
+    public List<ProductResponse> findProductsByBrand(String brandName) {
+        List<Product> products = productRepository.findByBrand_Name(brandName);
+        return products.stream()
+                .map(productMapper::toProductResponse)
+                .collect(Collectors.toList());
+    }
 
 
 //    public List<ProductResponse> findProductsBySexe(Sexe sexe) {
