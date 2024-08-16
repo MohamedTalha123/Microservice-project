@@ -5,6 +5,7 @@ import com.hps.orderservice.dto.BillResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -13,6 +14,9 @@ import java.util.List;
         url = "${application.config.payment-url}"
 )
 public interface PaymentClient {
+
+//    @PostMapping("/confirm-payment")
+//    String confirmBillPayment(@RequestParam String verificationCode);
     @PostMapping("/create-bill")
     BillResponse createBill(@RequestBody BillRequest billRequests);
 }

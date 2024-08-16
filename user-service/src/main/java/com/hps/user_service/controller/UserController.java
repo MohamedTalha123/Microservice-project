@@ -2,6 +2,7 @@ package com.hps.user_service.controller;
 
 import com.hps.user_service.dto.UserRequest;
 import com.hps.user_service.dto.UserResponse;
+import com.hps.user_service.entity.User;
 import com.hps.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class UserController  {
     ) {
         userService.deleteUser(userId);
         return ResponseEntity.accepted().build();
+    }
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<User> findByPhone(
+            @PathVariable("phone") String phone
+    ){
+        return ResponseEntity.ok( userService.findUserByPhone(phone));
     }
 
 

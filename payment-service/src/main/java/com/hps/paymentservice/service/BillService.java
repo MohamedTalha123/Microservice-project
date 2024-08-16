@@ -96,13 +96,14 @@ public class BillService {
                     PaymentInfo paymentInfo = new PaymentInfo();
                     paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue());
                     paymentInfo.setCurrency("USD");
-                    paymentInfo.setReceiptEmail("boujrah.yahya@gmail.com");
+                    paymentInfo.setReceiptEmail("mouad10cherrat@gmail.com");
 
                     PaymentIntent paymentIntent = createPaymentIntent(paymentInfo);
                     //not sure
                     if ("succeeded".equals(paymentIntent.getStatus())) {
                         appBill.setPaid(Boolean.TRUE);
                         billRepo.save(appBill);
+                        // TODO: Call the updateProductsQuantity after the payment
                         appBill = null;
                         return "Bill paid successfully";
                     } else {

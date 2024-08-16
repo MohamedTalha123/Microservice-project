@@ -52,7 +52,6 @@ public class OrderService {
             throw new RuntimeException("Product out of stock");
         }
         // Fetch product details to get the price
-
         var product = this.productClient.getProductById(request.product_id())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -175,11 +174,13 @@ public class OrderService {
         return orderLineItemsProducts;
     }
 
-    public void payBill() {
+    public void payBill(BillRequest billRequest) {
         //todo: call paybill from payment service
+        //this.paymentClient.payBill(billRequest);
     }
 
-    public void confirmPayment(){
+    public void confirmPayment(String verificationCode){
         //todo: call confirmPayment from payment service
+      //  this.paymentClient.confirmBillPayment(verificationCode);
     }
 }

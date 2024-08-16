@@ -14,12 +14,10 @@ public class UserMapper {
         return User.builder()
                 .id(request.id())
                 .userName(request.userName())
-                .lastName(request.lastName())
                 .password(request.password())
                 .email(request.email())
                 .password(request.password())
                 .role(request.role())
-                .sexe(request.sexe())
                 .build();
     }
 
@@ -31,7 +29,8 @@ public class UserMapper {
                 user.getPassword(),
                 user.getEmail(),
                 user.getSexe(),
-                user.getRole()
+                user.getRole(),
+                user.getPhone()
         );
     }
 }
