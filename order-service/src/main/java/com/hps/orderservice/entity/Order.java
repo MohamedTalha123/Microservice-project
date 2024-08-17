@@ -36,10 +36,6 @@ public class Order {
 
     private Long userId;
 
-    //can be omitted from here and add it to bill(facture)
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonManagedReference
     @JsonIgnore
@@ -49,7 +45,6 @@ public class Order {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
-
 
     @UpdateTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

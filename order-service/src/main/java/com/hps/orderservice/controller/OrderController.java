@@ -51,6 +51,19 @@ public class OrderController {
         return ResponseEntity.ok(orderLineResponses);
     }
 
+    @PostMapping("/pay-bill")
+    public ResponseEntity<String> payBill(@RequestBody BillRequest billRequest) {
+        String response = orderService.payBill(billRequest);
+        return ResponseEntity.ok(response);
+    }
 
-    
+    @PostMapping("/confirm-payment")
+    public ResponseEntity<String> confirmPayment(@RequestParam String verificationCode) {
+        String response = orderService.confirmPayment(verificationCode);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
 }

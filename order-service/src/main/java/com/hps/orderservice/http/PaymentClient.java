@@ -15,8 +15,10 @@ import java.util.List;
 )
 public interface PaymentClient {
 
-//    @PostMapping("/confirm-payment")
-//    String confirmBillPayment(@RequestParam String verificationCode);
+    @PostMapping("/pay-bill")
+    String payBill(@RequestBody BillRequest billRequest);
+    @PostMapping("/confirm-payment")
+    String confirmBillPayment(@RequestParam String verificationCode);
     @PostMapping("/create-bill")
-    BillResponse createBill(@RequestBody BillRequest billRequests);
+    BillResponse createBill(@RequestBody BillRequest billRequest);
 }

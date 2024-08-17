@@ -23,7 +23,7 @@ public interface ProductClient {
     @GetMapping("/{productId}")
     Optional<ProductResponse> getProductById(@PathVariable("productId") Long productId);
 
-    @GetMapping("")
+    @GetMapping
     ResponseEntity<List<ProductResponse>> findAllById(@RequestParam ("id")Set<Long> id);
 
 }

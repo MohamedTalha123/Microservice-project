@@ -46,7 +46,7 @@ public class BillService {
     private String numeric;
 
     public Bill createBill(BillRequest billRequest){
-        String ref = UUID.randomUUID().toString();
+        String ref = UUID.randomUUID().toString().substring(0, 5);;
 
         appBill = billRepo.save(
                 Bill.builder()
@@ -94,28 +94,28 @@ public class BillService {
             if (minutes <= 5) {
                 try {
                     PaymentInfo paymentInfo = new PaymentInfo();
-                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(1)).intValue());
+                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(10)).intValue());
                     paymentInfo.setCurrency("USD");
                     paymentInfo.setReceiptEmail("mouad10cherrat@gmail.com");
 
                     PaymentIntent paymentIntent = createPaymentIntent(paymentInfo);
+                    System.out.println("payemtnn intent ++++++++++++ " + paymentIntent);
                     //not sure
-                    if ("succeeded".equals(paymentIntent.getStatus())) {
+//                    if ("succeeded".equals(paymentIntent.getStatus())) {
                         appBill.setPaid(Boolean.TRUE);
                         billRepo.save(appBill);
-                        // TODO: Call the updateProductsQuantity after the payment
                         appBill = null;
                         return "Bill paid successfully";
-                    } else {
-                        return "Payment failed, status: " + paymentIntent.getStatus();
-                    }
+//                    } else {
+//                        return "Payment failed, status: " + paymentIntent.getStatus();
+//                    }
 
                 } catch (StripeException e) {
                     return "Payment failed: " + e.getMessage();
                 }
-            } else return "Verification code expired, try again !";
+            } else throw new RuntimeException("Verification code expired, try again !");
         }
-        return "Wrong code, try again !";
+        throw new RuntimeException("Wrong code, try again !") ;
     }
 
     public String passwordForSms(){

@@ -1,25 +1,18 @@
 package com.hps.orderservice.service;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hps.orderservice.dto.*;
 import com.hps.orderservice.entity.Order;
 import com.hps.orderservice.entity.OrderLineItem;
-import com.hps.orderservice.entity.PaymentMethod;
 import com.hps.orderservice.exception.OrderException;
 import com.hps.orderservice.http.PaymentClient;
 import com.hps.orderservice.http.ProductClient;
 import com.hps.orderservice.http.UserClient;
-import com.hps.orderservice.mapper.OrderLineMapper;
 import com.hps.orderservice.repository.OrderLineRepository;
 import com.hps.orderservice.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -61,7 +54,6 @@ public class OrderService {
                     .userId(request.user_id())
                     .reference(generateReference())
                     .lastModifiedDate(LocalDateTime.now())
-                    .paymentMethod(PaymentMethod.STRIPE)
                     .totalAmount(BigDecimal.ZERO)
                     .build();
             this.orderRepository.save(order);
@@ -82,9 +74,6 @@ public class OrderService {
         return this.orderRepository.save(order);
     }
 
-    // TODO: Implement the payment process
-    // TODO: Call the updateProductsQuantity after the payment
-    // TODO: Send the order confirmation through notification-service
     private String generateReference() {
         String ref = UUID.randomUUID().toString().substring(0, 8);
         return "CMD-".concat(ref);
@@ -149,7 +138,6 @@ public class OrderService {
                 .collect(Collectors.toMap(OrderLineItem::getProductId, orderLineItem -> orderLineItem));
 
         List<ProductResponse> products = productClient.findAllById(orderLineMap.keySet()).getBody();
-        System.out.println("PRODUCTS ::::"+products);
         Map<Long, ProductResponse> productMap = products.stream()
                 .collect(Collectors.toMap(ProductResponse::getId, product -> product));
 
@@ -174,13 +162,29 @@ public class OrderService {
         return orderLineItemsProducts;
     }
 
-    public void payBill(BillRequest billRequest) {
-        //todo: call paybill from payment service
-        //this.paymentClient.payBill(billRequest);
+    public String payBill(BillRequest billRequest) {
+        return this.paymentClient.payBill(billRequest);
     }
 
-    public void confirmPayment(String verificationCode){
-        //todo: call confirmPayment from payment service
-      //  this.paymentClient.confirmBillPayment(verificationCode);
+    public String confirmPayment(String verificationCode){
+        this.paymentClient.confirmBillPayment(verificationCode);
+        List< PurchaseRequest> purchaseList = new ArrayList<>();
+        List<OrderLineItem> orderLineByOrder = orderLineRepository.findAllByOrder(order);
+
+        for(OrderLineItem item : orderLineByOrder){
+            PurchaseRequest purchasedItem = PurchaseRequest.builder()
+                    .product_id(item.getProductId())
+                    .quantity(item.getQuantity())
+                    .build();
+
+            purchaseList.add(purchasedItem);
+        }
+
+        Boolean status = this.productClient.updateProductsQuantity(purchaseList);
+
+        if(status == Boolean.FALSE){
+            throw new RuntimeException("Error while trying to update the products");
+        }
+        return "The products were updated successfully";
     }
 }

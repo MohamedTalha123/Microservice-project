@@ -33,6 +33,7 @@ public class SmsService {
 
         SmsSubmissionResponse response = vonageClient.getSmsClient().submitMessage(message);
 
+        System.out.println("responsee +++++ "+ response);
         if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
             System.out.println("message sent successfully to " + phone);
         } else {
