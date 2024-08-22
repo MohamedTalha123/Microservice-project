@@ -44,8 +44,8 @@ notification:
 
 vonage:
   api:
-    key:  f7caf005
-    secret: oP4F8kWfIVpd6Ny1
+    key:  fabb2f6c
+    secret: m4ImP8tw3nMfbLOu
 
 eureka:
   instance.prefer-ip-address: true

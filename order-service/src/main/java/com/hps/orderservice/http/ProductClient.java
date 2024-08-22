@@ -20,7 +20,7 @@ public interface ProductClient {
     Boolean checkProductAvailability(@RequestBody PurchaseRequest purchaseRequest);
     @PostMapping("/update")
     Boolean updateProductsQuantity(@RequestBody List<PurchaseRequest> purchaseRequest);
-    @GetMapping("/{productId}")
+    @GetMapping("/public/{productId}")
     Optional<ProductResponse> getProductById(@PathVariable("productId") Long productId);
 
     @GetMapping

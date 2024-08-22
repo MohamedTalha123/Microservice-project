@@ -21,12 +21,12 @@ public class BrandController {
         return ResponseEntity.ok(brandService.createBrand(request));
     }
 
-    @GetMapping("/{brandId}")
+    @GetMapping("/public/{brandId}")
     public ResponseEntity<BrandResponse> getBrandById(@PathVariable("brandId") Long brandId) {
         return ResponseEntity.ok(brandService.getBrandById(brandId));
     }
 
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<List<BrandResponse>> findAll() {
         return ResponseEntity.ok(brandService.findAll());
     }

@@ -32,18 +32,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProductsQuantity(request));
     }
     
-    @GetMapping("/{productId}")
+    @GetMapping("/public/{productId}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable ("productId") Long productId){
         return ResponseEntity.ok( productService.getProductById(productId));
     }
-//    @GetMapping("/sexe/{sexe}")
-//    public ResponseEntity<List<ProductResponse>> findProductsBySexe(@PathVariable String sexe) {
-//        Sexe sexeEnum = Sexe.valueOf(sexe.toUpperCase());
-//        List<ProductResponse> products = productService.findProductsBySexe(sexeEnum);
-//        return ResponseEntity.ok(products);
-//    }
 
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<List<ProductResponse>> findAll(){
         return ResponseEntity.ok(productService.findAll());
     }
@@ -56,7 +50,7 @@ public class ProductController {
     public ResponseEntity<Long> updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(productId, request));
     }
-    @GetMapping("/reference/{reference}")
+    @GetMapping("/public/reference/{reference}")
     public ResponseEntity<Optional<ProductResponse>> getProductByReference(@PathVariable ("reference") String reference){
         return ResponseEntity.ok( productService.getProductByReference(reference));
     }

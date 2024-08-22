@@ -1,37 +1,13 @@
 //package com.hps.user_service.security;
-////
-////import org.springframework.context.annotation.Bean;
-////import org.springframework.context.annotation.Configuration;
-////import org.springframework.security.config.Customizer;
-////import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-////import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-////import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-////import org.springframework.security.config.http.SessionCreationPolicy;
-////import org.springframework.security.web.SecurityFilterChain;
-////
-////@Configuration
-////@EnableWebSecurity
-////public class SecurityConfig {
-////    @Bean
-////    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-////        http
-////                .csrf(AbstractHttpConfigurer::disable)
-////                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-////                .authorizeHttpRequests(authz -> authz
-////                        .requestMatchers("/actuator/**").permitAll()
 //
-////                        .anyRequest().authenticated()
-////                )
-////                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
-////        return http.build();
-////    }
-////}
 //
+//import org.apache.catalina.filters.CorsFilter;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.config.Customizer;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.http.SessionCreationPolicy;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 //import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -47,6 +23,8 @@
 //import org.springframework.security.web.session.HttpSessionEventPublisher;
 //import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 //import org.springframework.web.client.RestTemplate;
+//import org.springframework.web.cors.CorsConfiguration;
+//import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 //
 //import java.util.Collection;
 //import java.util.HashSet;
@@ -88,20 +66,20 @@
 //    }
 //
 //    @Bean
-//    public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests(auth -> auth
-//                .requestMatchers(new AntPathRequestMatcher("/api/v1/users*"))
-//                .hasRole("admin")
-//                .requestMatchers(new AntPathRequestMatcher("/"))
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated());
-//        http.oauth2ResourceServer((oauth2) -> oauth2
-//                .jwt(Customizer.withDefaults()));
-//        http.oauth2Login(Customizer.withDefaults())
-//                .logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(csrf -> csrf.disable())  // Disable CSRF if necessary for testing (re-enable in production)
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().authenticated()
+//                )
+//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//
+//
 //        return http.build();
 //    }
+//
+//
 //    @Bean
 //    public JwtDecoder jwtDecoder() {
 //        // Replace the URL with your Keycloak issuer URI
@@ -120,7 +98,6 @@
 //                var userInfo = oidcUserAuthority.getUserInfo();
 //
 //                // Tokens can be configured to return roles under
-//                // Groups or REALM ACCESS hence have to check both
 //                if (userInfo.hasClaim(REALM_ACCESS_CLAIM)) {
 //                    var realmAccess = userInfo.getClaimAsMap(REALM_ACCESS_CLAIM);
 //                    var roles = (Collection<String>) realmAccess.get(ROLES_CLAIM);
