@@ -162,8 +162,11 @@ public class OrderService {
         return orderLineItemsProducts;
     }
 
-    public String payBill(BillRequest billRequest) {
-        return this.paymentClient.payBill(billRequest);
+    public String createPaymentIntent(PaymentInfo info){
+        return this.paymentClient.createPaymentIntent(info);
+    }
+    public String payBill(String phone) {
+        return this.paymentClient.payBill(phone);
     }
 
     public String confirmPayment(String verificationCode){
