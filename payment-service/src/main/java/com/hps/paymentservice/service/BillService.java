@@ -1,6 +1,5 @@
 package com.hps.paymentservice.service;
 
-
 import com.hps.paymentservice.dto.NotificationRequest;
 import com.hps.paymentservice.repository.BillRepo;
 import com.hps.paymentservice.dto.BillRequest;
@@ -26,7 +25,6 @@ public class BillService {
 
     private final RabbitTemplate rabbitTemplate;
 
-
     @Value("${notification.msgRoutingKey}")
     private String msgRoutingKey;
 
@@ -46,8 +44,12 @@ public class BillService {
     private String numeric;
 
     public Bill createBill(BillRequest billRequest){
-        String ref = UUID.randomUUID().toString().substring(0, 5);;
 
+        if(appBill != null){
+            return appBill;
+        }
+
+        String ref = UUID.randomUUID().toString().substring(0, 5);;
         appBill = billRepo.save(
                 Bill.builder()
                         .clientId(billRequest.getClientId())
@@ -76,14 +78,14 @@ public class BillService {
         return PaymentIntent.create(params);
     }
 
-    public String payBill(BillRequest billRequest){
+    public String payBill(String phone){
         String verificationCode = passwordForSms();
         System.out.println(verificationCode);
 
         appBill.setVerificationCode(verificationCode);
         appBill.setVerificationCodeSentAt(LocalDateTime.now());
         billRepo.save(appBill);
-        sendNotification(billRequest.getPhone(), verificationCode ,"OTP" );
+        sendNotification(phone, verificationCode ,"OTP" );
 
         return "Check sms to verify payment";
     }
@@ -92,14 +94,14 @@ public class BillService {
         int minutes = (int) ChronoUnit.MINUTES.between(appBill.getVerificationCodeSentAt(), LocalDateTime.now());
         if ( appBill.getVerificationCode().equals(verificationCode)) {
             if (minutes <= 5) {
-                try {
-                    PaymentInfo paymentInfo = new PaymentInfo();
-                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(10)).intValue());
-                    paymentInfo.setCurrency("USD");
-                    paymentInfo.setReceiptEmail("mouad10cherrat@gmail.com");
-
-                    PaymentIntent paymentIntent = createPaymentIntent(paymentInfo);
-                    System.out.println("payemtnn intent ++++++++++++ " + paymentIntent);
+//                try {
+//                    PaymentInfo paymentInfo = new PaymentInfo();
+//                    paymentInfo.setAmount(appBill.getTotalAmount().multiply(BigDecimal.valueOf(10)).intValue());
+//                    paymentInfo.setCurrency("USD");
+//                    paymentInfo.setReceiptEmail("mouad10cherrat@gmail.com");
+//
+//                    PaymentIntent paymentIntent = createPaymentIntent(paymentInfo);
+//                    System.out.println("payemtnn intent ++++++++++++ " + paymentIntent);
                     //not sure
 //                    if ("succeeded".equals(paymentIntent.getStatus())) {
                         appBill.setPaid(Boolean.TRUE);
@@ -110,9 +112,9 @@ public class BillService {
 //                        return "Payment failed, status: " + paymentIntent.getStatus();
 //                    }
 
-                } catch (StripeException e) {
-                    return "Payment failed: " + e.getMessage();
-                }
+//                } catch (StripeException e) {
+//                    return "Payment failed: " + e.getMessage();
+//                }
             } else throw new RuntimeException("Verification code expired, try again !");
         }
         throw new RuntimeException("Wrong code, try again !") ;

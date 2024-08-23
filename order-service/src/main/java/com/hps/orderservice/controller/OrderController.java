@@ -16,10 +16,10 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-@PostMapping
+    @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request){
     return ResponseEntity.ok(orderService.createOrder(request));
-}
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.findOrderById(id));
@@ -30,7 +30,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAll());
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<Order> updateOrder( @RequestBody OrderRequest request) {
         return ResponseEntity.ok(orderService.updateOrder( request));
     }
@@ -52,8 +52,8 @@ public class OrderController {
     }
 
     @PostMapping("/pay-bill")
-    public ResponseEntity<String> payBill(@RequestBody BillRequest billRequest) {
-        String response = orderService.payBill(billRequest);
+    public ResponseEntity<String> payBill(@RequestBody String phone) {
+        String response = orderService.payBill(phone);
         return ResponseEntity.ok(response);
     }
 
@@ -62,8 +62,9 @@ public class OrderController {
         String response = orderService.confirmPayment(verificationCode);
         return ResponseEntity.ok(response);
     }
-
-
-
-
+    @PostMapping("/create-intent")
+    public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo)  {
+        String paymentIntent = orderService.createPaymentIntent(paymentInfo);
+        return ResponseEntity.ok(paymentIntent);
+    }
 }
