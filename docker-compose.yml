@@ -8,9 +8,9 @@ services:
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
-    command: "start-dev"
+    command: "start-dev --import-realm"
     volumes:
-      - keycloak_data:/opt/keycloak/data
+      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     networks:
       - db-net
 
