@@ -51,14 +51,7 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime lastModifiedDate;
 
-    public void addOrderLineItem(OrderLineItem orderLineItem) {
-        orderLineItems.add(orderLineItem);
-        orderLineItem.setOrder(this);
-    }
 
-    public void removeOrderLineItem(OrderLineItem orderLineItem) {
-        orderLineItems.remove(orderLineItem);
-        orderLineItem.setOrder(null);
-    }
+
 
 }

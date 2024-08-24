@@ -21,7 +21,6 @@ public class OrderLineItem {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "order_id")
-    @JsonBackReference
     @JsonIgnore
     private Order order;
 

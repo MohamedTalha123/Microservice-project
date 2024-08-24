@@ -40,6 +40,15 @@ public class OrderController {
         orderService.deleteOrderById();
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/getCurrentOrder")
+    public ResponseEntity<Order> getCurrentOrder(){
+       return ResponseEntity.ok(orderService.getCurrentOrder()) ;
+    }
+    @GetMapping("/getCurrentOrderLineItems")
+    public ResponseEntity<List<OrderLineItemResponse>> getOrderLineItemsByOrder(){
+        return ResponseEntity.ok(orderService.getOrderLineItemsByOrder()) ;
+    }
+
     @PostMapping("/checkout")
     public ResponseEntity<BillResponse> checkout(@RequestBody BillRequest billRequest) {
         BillResponse response = orderService.checkout(billRequest);

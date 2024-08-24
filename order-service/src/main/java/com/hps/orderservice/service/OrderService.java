@@ -57,7 +57,16 @@ public class OrderService {
                     .totalAmount(BigDecimal.ZERO)
                     .build();
             this.orderRepository.save(order);
-
+        }
+        List<OrderLineItem> orderLineItems= orderLineRepository.findAllByOrder(order);
+        for(OrderLineItem item : orderLineItems ){
+            if(Objects.equals(item.getProductId(), request.product_id())){
+                item.setQuantity(item.getQuantity()+ request.quantity());
+                item.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
+                this.orderLineRepository.save(item);
+                order.setTotalAmount(order.getTotalAmount().add(item.getPrice()));
+                return this.orderRepository.save(order);
+            }
         }
         OrderLineItem orderLineItem = OrderLineItem.builder()
                 .order(order)
@@ -73,6 +82,11 @@ public class OrderService {
 
         return this.orderRepository.save(order);
     }
+    public Order getCurrentOrder(){
+        if(order != null )
+            return order;
+        return null;
+    }
 
     private String generateReference() {
         String ref = UUID.randomUUID().toString().substring(0, 8);
@@ -87,7 +101,38 @@ public class OrderService {
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
+    public List<OrderLineItemResponse> getOrderLineItemsByOrder(){
+        List<OrderLineItem> orderLineItems= orderLineRepository.findAllByOrder(order);
+        List<OrderLineItemResponse>orderLineItemsProducts=new ArrayList<>();
+        Map<Long, OrderLineItem> orderLineMap = orderLineItems
+                .stream()
+                .collect(Collectors.toMap(OrderLineItem::getProductId, orderLineItem -> orderLineItem));
 
+        List<ProductResponse> products = productClient.findAllById(orderLineMap.keySet()).getBody();
+        Map<Long, ProductResponse> productMap = products.stream()
+                .collect(Collectors.toMap(ProductResponse::getId, product -> product));
+        for (Long productId : orderLineMap.keySet()) {
+            OrderLineItem orderLineItem = orderLineMap.get(productId);
+            ProductResponse productResponse = productMap.get(productId);
+
+            OrderLineItemResponse orderLineItemResponse = OrderLineItemResponse.builder()
+                    .product(ProductResponse.builder()
+                            .id(productId)
+                            .availableQuantity(productResponse.getAvailableQuantity())
+                            .description(productResponse.getDescription())
+                            .imageUrl(productResponse.getImageUrl())
+                            .reference(productResponse.getReference())
+                            .price(productResponse.getPrice())
+                            .name(productResponse.getName())
+                            .build())
+                    .quantity(orderLineItem.getQuantity())
+                    .build();
+            orderLineItemsProducts.add(orderLineItemResponse);
+        }
+
+        return orderLineItemsProducts;
+
+    }
     @Transactional
     public Order updateOrder(OrderRequest request) {
 
