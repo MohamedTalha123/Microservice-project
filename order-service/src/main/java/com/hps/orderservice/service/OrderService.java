@@ -131,14 +131,10 @@ public class OrderService {
         }
 
         return orderLineItemsProducts;
-
     }
-    @Transactional
     public Order updateOrder(OrderRequest request) {
-
         var product = this.productClient.getProductById(request.product_id())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        System.out.println("xxx:" + order.getId());
         List<OrderLineItem> orderLineByOrder = orderLineRepository.findAllByOrder(order);
 
         OrderLineItem orderLineItem = orderLineByOrder.stream()
@@ -146,23 +142,23 @@ public class OrderService {
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("OrderLineItem not found"));
 
-
-        orderLineItem.setQuantity(request.quantity());
-        orderLineItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
-        if (request.quantity() == 0) {
+        double newQuantity = orderLineItem.getQuantity() - request.quantity();
+        if (newQuantity == 0) {
             this.orderLineRepository.delete(orderLineItem);
+        }else{
+            orderLineItem.setQuantity(newQuantity);
+            orderLineItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
+            this.orderLineRepository.save(orderLineItem);
         }
-        this.orderLineRepository.save(orderLineItem);
-
-        BigDecimal totalAmount = orderLineByOrder
+        BigDecimal totalAmount = orderLineRepository.findAllByOrder(order)
                 .stream()
                 .map(OrderLineItem::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         order.setTotalAmount(totalAmount);
 
         return orderRepository.save(order);
     }
-
     @Transactional
     public void deleteOrderById() {
         orderRepository.deleteById(order.getId());

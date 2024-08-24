@@ -36,10 +36,10 @@ public class Order {
 
     private Long userId;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JsonIgnore
-    private List<OrderLineItem> orderLineItems = new ArrayList<>();
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+//    @JsonManagedReference
+//    @JsonIgnore
+//    private List<OrderLineItem> orderLineItems = new ArrayList<>();
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
