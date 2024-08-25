@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -61,14 +62,14 @@ public class OrderController {
     }
 
     @PostMapping("/pay-bill")
-    public ResponseEntity<String> payBill(@RequestBody String phone) {
-        String response = orderService.payBill(phone);
+    public ResponseEntity<Map<String,String>> payBill(@RequestBody String phone) {
+        Map<String,String> response = orderService.payBill(phone);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/confirm-payment")
-    public ResponseEntity<String> confirmPayment(@RequestParam String verificationCode) {
-        String response = orderService.confirmPayment(verificationCode);
+    public ResponseEntity<Map<String,String>> confirmPayment(@RequestBody String verificationCode) {
+        Map<String,String> response = orderService.confirmPayment(verificationCode);
         return ResponseEntity.ok(response);
     }
     @PostMapping("/create-intent")

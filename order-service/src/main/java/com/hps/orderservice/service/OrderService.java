@@ -206,11 +206,14 @@ public class OrderService {
     public String createPaymentIntent(PaymentInfo info){
         return this.paymentClient.createPaymentIntent(info);
     }
-    public String payBill(String phone) {
-        return this.paymentClient.payBill(phone);
+    public Map<String, String> payBill(String phone) {
+        String responseMessage =  this.paymentClient.payBill(phone);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", responseMessage);
+        return response;
     }
 
-    public String confirmPayment(String verificationCode){
+    public Map<String,String> confirmPayment(String verificationCode){
         this.paymentClient.confirmBillPayment(verificationCode);
         List< PurchaseRequest> purchaseList = new ArrayList<>();
         List<OrderLineItem> orderLineByOrder = orderLineRepository.findAllByOrder(order);
@@ -229,6 +232,9 @@ public class OrderService {
         if(status == Boolean.FALSE){
             throw new RuntimeException("Error while trying to update the products");
         }
-        return "The products were updated successfully";
+        order = null;
+        Map<String,String> response = new HashMap<>();
+        response.put("message",  "The payment was successful, Thank YOU !");
+        return response;
     }
 }

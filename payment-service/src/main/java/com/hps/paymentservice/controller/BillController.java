@@ -35,7 +35,7 @@ public class BillController {
     }
 
     @PostMapping("/confirm-payment")
-    public ResponseEntity<String> confirmPayment(@RequestParam String verificationCode) {
+    public ResponseEntity<String> confirmPayment(@RequestBody String verificationCode) {
         String response = billService.confirmBillPayment(verificationCode);
         return ResponseEntity.ok(response);
     }

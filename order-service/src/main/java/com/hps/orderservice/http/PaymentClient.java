@@ -20,7 +20,7 @@ public interface PaymentClient {
     @PostMapping("/pay-bill")
     String payBill(@RequestBody String phone);
     @PostMapping("/confirm-payment")
-    String confirmBillPayment(@RequestParam String verificationCode);
+    String confirmBillPayment(@RequestBody String verificationCode);
     @PostMapping("/create-bill")
     BillResponse createBill(@RequestBody BillRequest billRequest);
     @PostMapping("/create-intent")
