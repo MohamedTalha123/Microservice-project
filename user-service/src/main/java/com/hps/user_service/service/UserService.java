@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,7 +69,13 @@ public class UserService {
     public User findUserByPhone(String phone){
         return userRepository.findUserByPhone(phone);
     }
-    public User findUserByEMail(String email){
-        return userRepository.findUserByEmail(email);
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Long getUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::getId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
 }

@@ -1,12 +1,7 @@
 package com.hps.user_service.security;
 
-
-
-
 import com.hps.user_service.entity.User;
 import com.hps.user_service.repository.UserRepository;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -26,12 +21,14 @@ import java.util.Map;
 @Service
 public class KeycloakUserSyncService {
     @Autowired
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-  private final RestTemplate restTemplate;
+
+    private final RestTemplate restTemplate;
 
     @Autowired
     public KeycloakUserSyncService(@Lazy RestTemplate restTemplate) {
@@ -73,7 +70,6 @@ public class KeycloakUserSyncService {
             ResponseEntity<List> keycloakUsersResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, authRequest, List.class);
             List<Map<String, Object>> keycloakUsers = keycloakUsersResponse.getBody();
 
-
             // Sync users with the database
             for (Map<String, Object> keycloakUser : keycloakUsers) {
                 String userId = (String) keycloakUser.get("id");
@@ -82,6 +78,9 @@ public class KeycloakUserSyncService {
                 String firstName = (String) keycloakUser.get("firstName");
                 String lastName = (String) keycloakUser.get("lastName");
 
+                // Fetch user's custom attributes, including phone
+                Map<String, List<String>> attributes = (Map<String, List<String>>) keycloakUser.get("attributes");
+                String phone = attributes != null && attributes.containsKey("phone") ? attributes.get("phone").get(0) : null;
 
                 // Fetch user's roles
                 String rolesUrl = "http://localhost:9000/admin/realms/Hps-microservice/users/" + userId + "/role-mappings/realm";
@@ -104,6 +103,7 @@ public class KeycloakUserSyncService {
                 User user = userRepository.findByEmail(email).orElse(new User());
                 user.setUserName(username);
                 user.setEmail(email);
+                user.setPhone(phone);  // Set the phone number
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
 
@@ -116,4 +116,3 @@ public class KeycloakUserSyncService {
         }
     }
 }
-

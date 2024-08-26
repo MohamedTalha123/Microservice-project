@@ -42,6 +42,9 @@ public class BillService {
 
     @Value("${password.choices.5}")
     private String numeric;
+    public List<Bill> getAll(){
+        return billRepo.findAll();
+    }
 
     public Bill createBill(BillRequest billRequest){
 

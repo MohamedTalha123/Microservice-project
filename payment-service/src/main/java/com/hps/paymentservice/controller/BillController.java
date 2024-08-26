@@ -10,11 +10,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
 public class BillController {
     private final BillService billService;
+    @GetMapping
+    public ResponseEntity<List<Bill>> getAll(){
+        return ResponseEntity.ok(billService.getAll());
+    }
 
     @PostMapping("/create-intent")
     public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo) throws StripeException {
