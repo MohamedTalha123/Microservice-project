@@ -160,9 +160,13 @@ public class OrderService {
         return orderRepository.save(order);
     }
     @Transactional
-    public void deleteOrderById() {
-        orderRepository.deleteById(order.getId());
-        order = null;
+    public void deleteShoppingItems() {
+        if(order !=null){
+            orderLineRepository.deleteAllByOrder(order);
+            orderRepository.delete(order);
+            this.paymentClient.deleteBill();
+            order = null;
+        }
     }
 
     public BillResponse checkout(BillRequest billRequest) {

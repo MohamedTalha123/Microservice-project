@@ -39,6 +39,11 @@ public class BillController {
         String response = billService.payBill(phone);
         return ResponseEntity.ok(response);
     }
+    @DeleteMapping
+    public ResponseEntity<?> deleteBill() {
+        billService.deleteBill();
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping("/confirm-payment")
     public ResponseEntity<String> confirmPayment(@RequestBody String verificationCode) {

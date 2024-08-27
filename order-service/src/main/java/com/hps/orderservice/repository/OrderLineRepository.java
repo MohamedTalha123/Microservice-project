@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface OrderLineRepository extends JpaRepository<OrderLineItem,Long> {
     List<OrderLineItem> findAllByOrder(Order order);
+    void deleteAllByOrder(Order order);
 
 
 }

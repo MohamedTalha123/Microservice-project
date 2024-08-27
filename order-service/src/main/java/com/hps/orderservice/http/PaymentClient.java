@@ -5,6 +5,7 @@ import com.hps.orderservice.dto.BillResponse;
 import com.hps.orderservice.dto.PaymentInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,5 +26,7 @@ public interface PaymentClient {
     BillResponse createBill(@RequestBody BillRequest billRequest);
     @PostMapping("/create-intent")
     String createPaymentIntent(@RequestBody PaymentInfo paymentInfo);
+    @DeleteMapping
+    void deleteBill();
 }
 

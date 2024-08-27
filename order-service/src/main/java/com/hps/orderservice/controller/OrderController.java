@@ -38,7 +38,7 @@ public class OrderController {
 
     @DeleteMapping()
     public ResponseEntity<Void> deleteOrderById() {
-        orderService.deleteOrderById();
+        orderService.deleteShoppingItems();
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/getCurrentOrder")

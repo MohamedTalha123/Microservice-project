@@ -46,6 +46,12 @@ public class BillService {
         return billRepo.findAll();
     }
 
+    public void deleteBill(){
+        if(appBill != null){
+            billRepo.delete(appBill);
+            appBill = null;
+        }
+    }
     public Bill createBill(BillRequest billRequest){
 
         if(appBill != null){
@@ -105,7 +111,6 @@ public class BillService {
         }
         throw new RuntimeException("Wrong code, try again !") ;
     }
-
     public String passwordForSms(){
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < 5; i++){
