@@ -67,10 +67,8 @@ public class UserController  {
                         user.getId(),
                         user.getUserName(),
                         user.getLastName(),
-                        null, // Exclude password from response
                         user.getEmail(),
                         user.getRole(),
-                        user.getSexe(),
                         user.getPhone()
                 ))
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email)));

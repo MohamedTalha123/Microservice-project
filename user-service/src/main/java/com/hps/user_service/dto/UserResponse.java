@@ -4,10 +4,10 @@ public record UserResponse(
         Long id,
         String userName,
         String lastName,
-        String password,
+
         String email,
         String role,
-        String sexe ,
+
         String phone
 ) {
 }

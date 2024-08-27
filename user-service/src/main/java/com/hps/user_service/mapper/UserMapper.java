@@ -14,9 +14,7 @@ public class UserMapper {
         return User.builder()
                 .id(request.id())
                 .userName(request.userName())
-                .password(request.password())
                 .email(request.email())
-                .password(request.password())
                 .role(request.role())
                 .build();
     }
@@ -26,9 +24,7 @@ public class UserMapper {
                 user.getId(),
                 user.getUserName(),
                 user.getLastName(),
-                user.getPassword(),
                 user.getEmail(),
-                user.getSexe(),
                 user.getRole(),
                 user.getPhone()
         );
