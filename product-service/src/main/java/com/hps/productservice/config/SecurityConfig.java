@@ -1,40 +1,24 @@
-package com.hps.productservice.config;
-
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-
-
-@Configuration
-@EnableWebSecurity
-public class  SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/actuator/**","/eureka/**","/api/v1/products/public/**"
-                                ,"/api/v1/brands/public/**"
-                                ,"/api/v1/products/**"
-                                ,"/api/v1/brands/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
-        return http.build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return JwtDecoders.fromIssuerLocation("http://localhost:9000/realms/Hps-microservice");
-    }
-}
+//package com.hps.productservice.config;
+//
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.security.config.Customizer;
+//import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+//import org.springframework.security.config.web.server.ServerHttpSecurity;
+//import org.springframework.security.web.server.SecurityWebFilterChain;
+//
+//@Configuration
+//@EnableWebFluxSecurity
+//public class SecurityConfig {
+//    @Bean
+//    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
+//        return serverHttpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable)
+//                .authorizeExchange(exchange -> exchange.pathMatchers("/eureka/**")
+//                        .permitAll()
+//                        .anyExchange().authenticated()
+//                ).oauth2ResourceServer((oauth) -> oauth
+//                        .jwt(Customizer.withDefaults()))
+//                .build();
+//    }
+//}
+//
