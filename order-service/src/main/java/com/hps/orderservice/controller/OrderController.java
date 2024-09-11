@@ -41,6 +41,10 @@ public class OrderController {
         orderService.deleteShoppingItems();
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/{id}/line-items")
+    public ResponseEntity<List<OrderLineItemResponse>> getOrderLineItems(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderLineItemsByOrderId(id));
+    }
     @GetMapping("/getCurrentOrder")
     public ResponseEntity<Order> getCurrentOrder(){
        return ResponseEntity.ok(orderService.getCurrentOrder()) ;

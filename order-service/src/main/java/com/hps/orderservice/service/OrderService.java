@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -240,5 +241,37 @@ public class OrderService {
         Map<String,String> response = new HashMap<>();
         response.put("message",  "The payment was successful, Thank YOU !");
         return response;
+    }
+    public List<OrderLineItemResponse> getOrderLineItemsByOrderId(Long orderId) {
+        Order order = findOrderById(orderId);
+        List<OrderLineItem> orderLineItems = orderLineRepository.findAllByOrder(order);
+        return mapToOrderLineItemResponseList(orderLineItems);
+    }
+
+    private List<OrderLineItemResponse> mapToOrderLineItemResponseList(List<OrderLineItem> orderLineItems) {
+        List<OrderLineItemResponse> orderLineItemsProducts = new ArrayList<>();
+        Map<Long, OrderLineItem> orderLineMap = orderLineItems.stream()
+                .collect(Collectors.toMap(OrderLineItem::getProductId, Function.identity()));
+
+        List<ProductResponse> products = productClient.findAllById(orderLineMap.keySet()).getBody();
+        Map<Long, ProductResponse> productMap = products.stream()
+                .collect(Collectors.toMap(ProductResponse::getId, Function.identity()));
+
+        for (Long productId : orderLineMap.keySet()) {
+            OrderLineItem orderLineItem = orderLineMap.get(productId);
+            ProductResponse productResponse = productMap.get(productId);
+
+            OrderLineItemResponse orderLineItemResponse = OrderLineItemResponse.builder()
+                    .product(ProductResponse.builder()
+                            .id(productId)
+                            .name(productResponse.getName())
+                            .price(productResponse.getPrice())
+                            .build())
+                    .quantity(orderLineItem.getQuantity())
+                    .build();
+            orderLineItemsProducts.add(orderLineItemResponse);
+        }
+
+        return orderLineItemsProducts;
     }
 }
